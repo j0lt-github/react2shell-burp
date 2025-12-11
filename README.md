@@ -1,4 +1,5 @@
 # react2shellburp (CVE-2025-55182)
+Creator: **j0lt**
 
 Burp Suite extension for identifying the React Server Components unsafe deserialization vulnerability (React2Shell / CVE-2025-55182). It provides a focused UI tab, context-menu actions, active-scanner integration, and optional Burp Collaborator confirmation.
 
@@ -34,6 +35,16 @@ Artifact: `build/libs/react2shellburp-0.1.0.jar`
 - Sends `POST` with `Next-Action`/`X-Nextjs-*` headers and a crafted multipart payload targeting Server Actions.
 - Safe mode: vulnerable if `500` + `E{"digest"}` is returned without known mitigation signatures.
 - PoC mode: vulnerable if `X-Action-Redirect` contains `/login?a=...`; collaborator mode marks vulnerable on observed callbacks.
+
+## Active Scanner & Findings
+- Passive scan: flags likely RSC endpoints (issues appear in Scanner/Target > Issue Activity).
+- Active scan: reuses current tab options; if vulnerable, issues are added with request/response evidence and collaborator hits when enabled.
+- Target/Issue tabs will show `React2Shell / CVE-2025-55182` entries with severity High when exploitation indicators are found; informational issues appear for RSC fingerprints.
+
+## Releases (GitHub)
+1) Build the fat jar: `gradle clean shadowJar` (output: `build/libs/react2shellburp-0.1.0.jar`).
+2) Tag the commit, e.g. `git tag v0.1.0 && git push --tags`.
+3) Create a GitHub Release for the tag and upload `build/libs/react2shellburp-0.1.0.jar` as an asset. Repeat per version.
 
 ## Notes & Safety
 - Use only on targets you are authorized to test.
