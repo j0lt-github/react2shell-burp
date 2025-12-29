@@ -1,5 +1,6 @@
 # react2shellburp (CVE-2025-55182)
 Creator: **j0lt**
+Collaborator: https://github.com/shashank18
 
 Burp Suite extension to detect the React Server Components unsafe deserialization vulnerability (React2Shell / CVE-2025-55182).
 
