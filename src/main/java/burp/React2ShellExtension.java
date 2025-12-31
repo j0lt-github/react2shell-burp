@@ -38,7 +38,6 @@ public class React2ShellExtension implements IBurpExtender, ITab, IScannerCheck,
         callbacks.printOutput("React2Shell scanner loaded. Default mode uses safe digest check. Switch to PoC redirect mode for stronger confirmation.");
     }
 
-    // --- ITab ---
     @Override
     public String getTabCaption() {
         return "React2Shell";
@@ -49,7 +48,7 @@ public class React2ShellExtension implements IBurpExtender, ITab, IScannerCheck,
         return tab;
     }
 
-    // --- IScannerCheck ---
+    
     @Override
     public List<IScanIssue> doPassiveScan(IHttpRequestResponse baseRequestResponse) {
         if (baseRequestResponse == null || baseRequestResponse.getResponse() == null) {
