@@ -46,7 +46,7 @@ public class React2ShellExtension implements IBurpExtender, ITab, IScannerCheck,
         this.helpers = callbacks.getHelpers();
 
         // Issue 1: use a name that clearly describes the unique capability.
-        callbacks.setExtensionName("React2Shell RCE Scanner and Validator (CVE-2025-55182)");
+        callbacks.setExtensionName("React2Shell RCE Scanner and Validator");
 
         scanner = new React2ShellScanner(callbacks, helpers);
         tab = new React2ShellTab(callbacks, helpers, scanner);
