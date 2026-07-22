@@ -177,7 +177,7 @@ public class React2ShellTab extends JPanel {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(new EmptyBorder(6, 6, 6, 6));
 
-        JLabel title = new JLabel("React2Shell RCE Scanner and Validator – CVE-2025-55182");
+        JLabel title = new JLabel("React2Shell RCE Scanner and Validator");
         title.setFont(title.getFont().deriveFont(Font.BOLD, 14f));
 
         JLabel subtitle = new JLabel("Detects React Server Components unsafe deserialization (Next.js / RSC).");
