@@ -36,7 +36,7 @@ public class React2ShellTab extends JPanel {
     private final JCheckBox followRedirects = new JCheckBox("Follow same-host redirects", true);
     private final JTextField commandField = new JTextField("echo $((41*271))");
     private final JCheckBox collaboratorOob = new JCheckBox("Use Burp Collaborator (PoC)");
-    private final JSpinner collaboratorWait = new JSpinner(new SpinnerNumberModel(6, 1, 30, 1));
+    private final JSpinner collaboratorWait = new JSpinner(new SpinnerNumberModel(60, 30, 120, 5));
     private final JTextArea headersArea = new JTextArea(4, 20);
     private final JTextArea logArea = new JTextArea();
     private final JLabel statusLabel = new JLabel("Ready");
@@ -107,8 +107,18 @@ public class React2ShellTab extends JPanel {
         setBusy(true);
 
         executor.submit(() -> {
-            ScanResult result = scanner.scan(service, options.getPath(), options);
-            SwingUtilities.invokeLater(() -> renderResult(result));
+            // Issue 7a: catch all exceptions so failures surface in the Burp
+            // output tab and the UI is not left permanently in a busy state.
+            try {
+                ScanResult result = scanner.scan(service, options.getPath(), options);
+                SwingUtilities.invokeLater(() -> renderResult(result));
+            } catch (Exception ex) {
+                callbacks.printError("React2Shell manual scan failed: " + ex.getMessage());
+                SwingUtilities.invokeLater(() -> {
+                    setBusy(false);
+                    appendLog("[error] Scan threw an unexpected exception: " + ex.getMessage());
+                });
+            }
         });
     }
 
@@ -118,6 +128,9 @@ public class React2ShellTab extends JPanel {
 
     public void shutdown() {
         executor.shutdownNow();
+        // Also shut down the scanner's ScheduledExecutorService so Collaborator
+        // polling tasks don't outlive the extension.
+        scanner.shutdown();
     }
 
     private void renderResult(ScanResult result) {
@@ -164,7 +177,7 @@ public class React2ShellTab extends JPanel {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(new EmptyBorder(6, 6, 6, 6));
 
-        JLabel title = new JLabel("react2shellburp – CVE-2025-55182");
+        JLabel title = new JLabel("React Server Components RCE Scanner – CVE-2025-55182");
         title.setFont(title.getFont().deriveFont(Font.BOLD, 14f));
 
         JLabel subtitle = new JLabel("Detects React Server Components unsafe deserialization (Next.js / RSC).");

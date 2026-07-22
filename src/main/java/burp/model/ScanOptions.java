@@ -21,7 +21,7 @@ public class ScanOptions {
     private Map<String, String> extraHeaders = new LinkedHashMap<>();
     private String command = "echo $((41*271))";
     private boolean useCollaborator = false;
-    private int collaboratorWaitSeconds = 6;
+    private int collaboratorWaitSeconds = 60;
 
     public String getPath() {
         return path;

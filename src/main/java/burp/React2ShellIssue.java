@@ -42,19 +42,26 @@ public class React2ShellIssue implements IScanIssue {
                 "Affected: react-server-dom-webpack/turbopack/parcel versions 19.0.0, 19.1.0, 19.1.1, 19.2.0 and frameworks that bundle them.";
     }
 
+    /**
+     * Issue 7b: Burp renders issue detail strings as HTML. Any server-controlled
+     * value included verbatim could inject arbitrary HTML — including remote
+     * image tags that act as beacons when an analyst views the finding.
+     * All response-derived fields are HTML-encoded before inclusion.
+     */
     @Override
     public String getIssueDetail() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Path tested: ").append(result.getPathTested());
+        sb.append("Path tested: ").append(htmlEncode(result.getPathTested()));
         sb.append("<br>Status code: ").append(result.getStatusCode());
-        sb.append("<br>Evidence: ").append(result.getEvidence() == null ? "None captured" : result.getEvidence());
+        sb.append("<br>Evidence: ")
+          .append(result.getEvidence() == null ? "None captured" : htmlEncode(result.getEvidence()));
         if (result.getCommandUsed() != null) {
-            sb.append("<br>Command (PoC): ").append(result.getCommandUsed());
+            sb.append("<br>Command (PoC): ").append(htmlEncode(result.getCommandUsed()));
         }
         if (result.isCollaboratorHit()) {
-            sb.append("<br>Collaborator: ").append(result.getCollaboratorEvidence());
+            sb.append("<br>Collaborator: ").append(htmlEncode(result.getCollaboratorEvidence()));
         }
-        sb.append("<br>Mode: ").append(result.getMessage());
+        sb.append("<br>Mode: ").append(htmlEncode(result.getMessage()));
         return sb.toString();
     }
 
@@ -87,5 +94,28 @@ public class React2ShellIssue implements IScanIssue {
     @Override
     public URL getUrl() {
         return url;
+    }
+
+    // -----------------------------------------------------------------------
+    // Utility
+    // -----------------------------------------------------------------------
+
+    /**
+     * HTML-encodes a string so that server-controlled values cannot inject
+     * markup into Burp's issue detail panel.
+     *
+     * @param input the raw string (may be null)
+     * @return the HTML-safe string, or an empty string if input is null
+     */
+    private static String htmlEncode(String input) {
+        if (input == null) {
+            return "";
+        }
+        return input
+                .replace("&",  "&amp;")
+                .replace("<",  "&lt;")
+                .replace(">",  "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'",  "&#39;");
     }
 }
