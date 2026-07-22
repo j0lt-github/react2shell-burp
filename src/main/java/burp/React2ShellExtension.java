@@ -46,7 +46,7 @@ public class React2ShellExtension implements IBurpExtender, ITab, IScannerCheck,
         this.helpers = callbacks.getHelpers();
 
         // Issue 1: use a name that clearly describes the unique capability.
-        callbacks.setExtensionName("React Server Components RCE Scanner (CVE-2025-55182)");
+        callbacks.setExtensionName("React2Shell RCE Scanner (CVE-2025-55182)");
 
         scanner = new React2ShellScanner(callbacks, helpers);
         tab = new React2ShellTab(callbacks, helpers, scanner);
@@ -60,7 +60,7 @@ public class React2ShellExtension implements IBurpExtender, ITab, IScannerCheck,
         callbacks.registerExtensionStateListener(this);
 
         callbacks.printOutput(
-                "React Server Components RCE Scanner loaded. " +
+                "React2Shell RCE Scanner loaded. " +
                 "Default mode uses safe digest check. " +
                 "Switch to PoC redirect mode for stronger confirmation."
         );
