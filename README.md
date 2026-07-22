@@ -14,10 +14,10 @@ Burp Suite extension to detect the React Server Components unsafe deserializatio
 ```bash
 gradle clean shadowJar
 ```
-Artifact: `build/libs/react2shellburp-0.1.0.jar`
+Artifact: `build/libs/react2shellburp-0.1.1.jar`
 
 ## Install in Burp
-Burp → Extender → Extensions → Add → Type: Java → Select `build/libs/react2shellburp-0.1.0.jar` → Open the **React2Shell** tab.
+Burp → Extender → Extensions → Add → Type: Java → Select `build/libs/react2shellburp-0.1.1.jar` → Open the **React2Shell** tab.
 
 ## Usage
 1. Set target base URL/host and path (or right-click a request → “Load into React2Shell tab”).

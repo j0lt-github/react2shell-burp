@@ -224,7 +224,7 @@ public class React2ShellScanner {
         String normalizedPath = path.startsWith("/") ? path : "/" + path;
         headers.add("POST " + normalizedPath + " HTTP/1.1");
         headers.add("Host: " + service.getHost());
-        headers.add("User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 react2shellburp/0.1");
+        headers.add("User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 react2shellburp/0.1.1");
         headers.add("Accept: */*");
         headers.add("Content-Type: " + contentType);
         headers.add("Content-Length: " + contentLength);
