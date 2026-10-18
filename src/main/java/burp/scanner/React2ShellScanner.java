@@ -106,7 +106,8 @@ public class React2ShellScanner {
             }
             if (firstAttempt.vulnerable || !options.isFollowRedirects()
                     || firstAttempt.redirectLocation == null) {
-                scheduleCollaboratorCheck(firstAttempt, collaboratorContext, collaboratorPayload);
+                scheduleCollaboratorCheck(firstAttempt, collaboratorContext, collaboratorPayload,
+                        options.getCollaboratorWaitSeconds());
                 return toResult(firstAttempt, started, pathToTest, firstAttempt.commandUsed);
             }
 
@@ -115,10 +116,12 @@ public class React2ShellScanner {
             String redirectPath = derivePathFromLocation(firstAttempt.redirectLocation);
             Attempt redirectedAttempt = sendOnce(redirectService, redirectPath, options, collaboratorPayload);
             if (redirectedAttempt == null) {
-                scheduleCollaboratorCheck(firstAttempt, collaboratorContext, collaboratorPayload);
+                scheduleCollaboratorCheck(firstAttempt, collaboratorContext, collaboratorPayload,
+                        options.getCollaboratorWaitSeconds());
                 return toResult(firstAttempt, started, pathToTest, firstAttempt.commandUsed);
             }
-            scheduleCollaboratorCheck(redirectedAttempt, collaboratorContext, collaboratorPayload);
+            scheduleCollaboratorCheck(redirectedAttempt, collaboratorContext, collaboratorPayload,
+                    options.getCollaboratorWaitSeconds());
             return toResult(redirectedAttempt, started, redirectPath, redirectedAttempt.commandUsed);
         } catch (Exception e) {
             return new ScanResult(false, true, "Unexpected error: " + e.getMessage(), null,
@@ -375,9 +378,17 @@ public class React2ShellScanner {
      * left unchanged; the deferred issue appears as a separate (additional)
      * finding.</p>
      */
+    /**
+     * @param delaySeconds the user-configured wait time from
+     *                     {@link ScanOptions#getCollaboratorWaitSeconds()}.
+     *                     Previously this method ignored the UI setting and
+     *                     always used the hardcoded {@link #COLLABORATOR_POLL_DELAY_SECONDS}
+     *                     constant, making the spinner non-functional.
+     */
     private void scheduleCollaboratorCheck(Attempt attempt,
                                             IBurpCollaboratorClientContext collaboratorContext,
-                                            String payload) {
+                                            String payload,
+                                            long delaySeconds) {
         if (collaboratorContext == null || payload == null) {
             return;
         }
@@ -415,11 +426,10 @@ public class React2ShellScanner {
                             new burp.React2ShellIssue(rr, helpers, confirmedResult));
                 }
             } catch (Exception e) {
-                // Issue 7a: log failures instead of silently discarding them.
                 callbacks.printError(
                         "React2Shell Collaborator poll failed: " + e.getMessage());
             }
-        }, COLLABORATOR_POLL_DELAY_SECONDS, TimeUnit.SECONDS);
+        }, delaySeconds, TimeUnit.SECONDS);
     }
 
     // -----------------------------------------------------------------------
