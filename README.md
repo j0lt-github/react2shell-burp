@@ -16,10 +16,10 @@ A Burp Suite extension that detects and validates the React2Shell vulnerability 
 ```bash
 ./gradlew clean shadowJar
 ```
-Artifact: `build/libs/react2shellburp-0.1.1.jar`
+Artifact: `build/libs/react2shellburp-0.1.2.jar`
 
 ## Install in Burp
-Burp → Extender → Extensions → Add → Type: Java → Select `build/libs/react2shellburp-0.1.1.jar` → Open the **React2Shell** tab.
+Burp → Extender → Extensions → Add → Type: Java → Select `build/libs/react2shellburp-0.1.2.jar` → Open the **React2Shell** tab.
 
 ## Usage
 1. Set target base URL/host and path (or right-click a request → **Load into React2Shell tab**).
